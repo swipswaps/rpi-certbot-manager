@@ -1,0 +1,4 @@
+config/digitalocean.ini
+config/.makeenv
+letsencrypt/*
+!letsencrypt/.gitkeep
