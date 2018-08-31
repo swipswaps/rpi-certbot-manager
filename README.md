@@ -18,13 +18,13 @@ Use the template and create the credentials file.
 $ cp config/digitalocean.ini.example config/digitalocean.ini
 ```
 
-Get the API access key from digitalocean and update the 
+Get the API access key from digitalocean and update the
 `dns_digitalocean_token` variable in th credentials file.
 
 ##### Make config
 
 The project uses `Makefile` to ease the process of certificate generation
-and renewal. 
+and renewal.
 It uses variables set in the file `config/.makeenv`.
 Use the template and create the file:
 
@@ -45,7 +45,7 @@ $ make generate-certificates
 LetEncrypt issues certificates that are valid only for 90 days.
 The certificates need to be renewed very often.
 This project also includes the scripts to renew the certificates
-using a `cron` job. 
+using a `cron` job.
 To install the cronjob. Simple run:
 
 ```console
@@ -59,3 +59,10 @@ If you choose not to renew automatically, you can also run the following:
 ```console
 $ make renew
 ```
+
+##### After success hooks
+
+The project supports running bash scripts after generating and renewing the
+certificates.
+These bash script can be placed (or symlinked) in the `after-success-hooks`
+directory.

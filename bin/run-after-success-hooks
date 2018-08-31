@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo "Check and Run after success hooks (if any)"
+for file in $PWD/after-success-hooks/*; do
+  echo ">> Running after success hook: $file"
+  bash $file
+done

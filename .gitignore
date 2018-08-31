@@ -1,4 +1,8 @@
 config/digitalocean.ini
 config/.makeenv
+
 letsencrypt/*
 !letsencrypt/.gitkeep
+
+after-success-hooks/*
+!after-success-hooks/.gitkeep
