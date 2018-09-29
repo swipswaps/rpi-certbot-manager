@@ -1,2 +1,3 @@
-DOMAIN           ?= *.example.com
+DOMAINS          ?= *.example.com \
+                    *.onemore-example.com
 EMAIL            ?= you@email.com

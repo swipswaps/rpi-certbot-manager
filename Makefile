@@ -1,6 +1,17 @@
 include config/.makeenv
 CREDENTIALS_FILE ?= /config/digitalocean.ini
 
+# Join the list of domains from +DOMAINS+ variable to generate the string that
+# # is used to pass to the certbot scripts in the format
+# # ```
+# # certbot -d *.domain1.com -d *.domain2.com
+# # ```
+# # Join list elements according to
+# # http://www.gnu.org/software/make/manual/make.html#Syntax-of-Functions
+noop 	=
+space = $(noop) $(noop)
+DOMAINS_FOR_CERTBOT_ARGS = -d $(subst $(space), -d ,$(DOMAINS))
+
 generate-certificates:
 	docker run -it --rm --name certbot \
 		-v "$(shell pwd)/letsencrypt:/letsencrypt" \
@@ -8,7 +19,7 @@ generate-certificates:
 		tsrivishnu/for-rpi_alpine3.7_certbot-dns-digitalocean certonly \
 		--dns-digitalocean \
 		--dns-digitalocean-credentials $(CREDENTIALS_FILE) \
-        -d $(DOMAIN) \
+				$(DOMAINS_FOR_CERTBOT_ARGS) \
         -m "$(EMAIL)" \
         --agree-tos --non-interactive --config-dir /letsencrypt --work-dir /letsencrypt
 
