@@ -13,7 +13,7 @@ space = $(noop) $(noop)
 DOMAINS_FOR_CERTBOT_ARGS = -d $(subst $(space), -d ,$(DOMAINS))
 
 generate-certificates:
-	docker run -it --rm --name certbot \
+	docker run --rm --name certbot \
 		-v "$(shell pwd)/letsencrypt:/letsencrypt" \
 		-v "$(shell pwd)/config:/config" \
 		tsrivishnu/for-rpi_alpine3.7_certbot-dns-digitalocean certonly \
