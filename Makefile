@@ -23,7 +23,7 @@ generate-certificates:
         -m "$(EMAIL)" \
         --agree-tos --non-interactive --config-dir /letsencrypt --work-dir /letsencrypt
 
-	# bash $(shell pwd)/bin/run-after-success-hooks
+	bash $(shell pwd)/bin/run-after-success-hooks
 
 renew:
 	docker run --rm --name certbot \
