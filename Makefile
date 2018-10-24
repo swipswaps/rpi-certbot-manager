@@ -1,5 +1,8 @@
 include config/.makeenv
 CREDENTIALS_FILE ?= /config/digitalocean.ini
+ifeq ($(STAGING), 1)
+	STAGING_ARG = --staging
+endif
 
 # Join the list of domains from +DOMAINS+ variable to generate the string that
 # # is used to pass to the certbot scripts in the format
@@ -16,7 +19,7 @@ generate-certificates:
 	docker run --rm --name certbot \
 		-v "$(shell pwd)/letsencrypt:/letsencrypt" \
 		-v "$(shell pwd)/config:/config" \
-		tsrivishnu/for-rpi_alpine3.7_certbot-dns-digitalocean certonly \
+		tsrivishnu/for-rpi_alpine3.7_certbot-dns-digitalocean certonly $(STAGING_ARG) \
 		--dns-digitalocean \
 		--dns-digitalocean-credentials $(CREDENTIALS_FILE) \
 				$(DOMAINS_FOR_CERTBOT_ARGS) \
@@ -29,7 +32,7 @@ renew:
 	docker run --rm --name certbot \
 		-v "$(shell pwd)/letsencrypt:/letsencrypt" \
 		-v "$(shell pwd)/config:/config" \
-		tsrivishnu/for-rpi_alpine3.7_certbot-dns-digitalocean renew \
+		tsrivishnu/for-rpi_alpine3.7_certbot-dns-digitalocean renew $(STAGING_ARG) \
 		--force-renewal \
 		--dns-digitalocean \
 		--dns-digitalocean-credentials $(CREDENTIALS_FILE) \

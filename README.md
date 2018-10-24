@@ -66,3 +66,9 @@ The project supports running bash scripts after generating and renewing the
 certificates.
 These bash script can be placed (or symlinked) in the `after-success-hooks`
 directory.
+
+#### Running in staging mode
+
+```console
+$ make STAGING=1 renew
+```
