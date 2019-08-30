@@ -51,8 +51,8 @@ test:
 	echo $(DOMAINS)
 
 install-renewal-cron: install-logrotation
-	@echo "Adding cron job to run every 2nd month"
-	@echo "0 0 1 */2 * root make -C $(PWD) renew >> /var/log/certbot-manager/certbot.log 2>&1" > certbot_renewal.cron
+	@echo "==> Adding cron job to run every SUN, WED, FRI of every 2nd month..."
+	@echo "0 0 * */2 0,3,5 root make -C $(PWD) renew >> /var/log/certbot-manager/certbot.log 2>&1" > certbot_renewal.cron
 	sudo mv certbot_renewal.cron /etc/cron.d/certbot_renewal
 	sudo chown root:root /etc/cron.d/certbot_renewal
 	@echo "Cron installed at '/etc/cron.d/certbot_renewal'"
