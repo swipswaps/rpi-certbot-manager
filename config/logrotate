@@ -1,0 +1,8 @@
+/var/log/certbot-manager/certbot.log {
+  missingok
+  rotate 4
+  size 10M
+  compress
+  notifempty
+}
+

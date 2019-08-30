@@ -40,9 +40,19 @@ renew:
 
 	bash $(shell pwd)/bin/run-after-success-hooks
 
-install-renewal-cron:
+install-logrotation:
+	@echo "=> Installing log rotation config..."
+	sudo mkdir -p /var/log/certbot-manager/
+	sudo cp $(shell pwd)/config/logrotate /etc/logrotate.d/certbot-manager
+	sudo chown 0:0 /etc/logrotate.d/certbot-manager
+	sudo chmod 644 /etc/logrotate.d/certbot-manager
+
+test:
+	echo $(DOMAINS)
+
+install-renewal-cron: install-logrotation
 	@echo "Adding cron job to run every 2nd month"
-	@echo "0 0 1 */2 * root make -C $(PWD) renew >/tmp/certbot.log 2>&1" > certbot_renewal.cron
+	@echo "0 0 1 */2 * root make -C $(PWD) renew >> /var/log/certbot-manager/certbot.log 2>&1" > certbot_renewal.cron
 	sudo mv certbot_renewal.cron /etc/cron.d/certbot_renewal
 	sudo chown root:root /etc/cron.d/certbot_renewal
 	@echo "Cron installed at '/etc/cron.d/certbot_renewal'"
