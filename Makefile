@@ -4,6 +4,8 @@ ifeq ($(STAGING), 1)
 	STAGING_ARG = --staging
 endif
 
+DOCKER_RUN_CERTBOT ?= docker run --rm --name certbot -v "$(shell pwd)/letsencrypt:/letsencrypt" -v "$(shell pwd)/config:/config" tsrivishnu/for-rpi_alpine3.7_certbot-dns-digitalocean --dns-digitalocean --dns-digitalocean-credentials $(CREDENTIALS_FILE) --config-dir /letsencrypt --work-dir /letsencrypt
+
 # Join the list of domains from +DOMAINS+ variable to generate the string that
 # # is used to pass to the certbot scripts in the format
 # # ```
@@ -16,27 +18,14 @@ space = $(noop) $(noop)
 DOMAINS_FOR_CERTBOT_ARGS = -d $(subst $(space), -d ,$(DOMAINS))
 
 generate-certificates:
-	docker run --rm --name certbot \
-		-v "$(shell pwd)/letsencrypt:/letsencrypt" \
-		-v "$(shell pwd)/config:/config" \
-		tsrivishnu/for-rpi_alpine3.7_certbot-dns-digitalocean certonly $(STAGING_ARG) \
-		--dns-digitalocean \
-		--dns-digitalocean-credentials $(CREDENTIALS_FILE) \
+	$(DOCKER_RUN_CERTBOT) certonly $(STAGING_ARG) \
 				$(DOMAINS_FOR_CERTBOT_ARGS) \
-        -m "$(EMAIL)" \
-        --agree-tos --non-interactive --config-dir /letsencrypt --work-dir /letsencrypt
+        -m "$(EMAIL)" --agree-tos --non-interactive
 
 	bash $(shell pwd)/bin/run-after-success-hooks
 
 renew:
-	docker run --rm --name certbot \
-		-v "$(shell pwd)/letsencrypt:/letsencrypt" \
-		-v "$(shell pwd)/config:/config" \
-		tsrivishnu/for-rpi_alpine3.7_certbot-dns-digitalocean renew $(STAGING_ARG) \
-		--force-renewal \
-		--dns-digitalocean \
-		--dns-digitalocean-credentials $(CREDENTIALS_FILE) \
-        --config-dir /letsencrypt --work-dir /letsencrypt
+	$(DOCKER_RUN_CERTBOT) renew $(STAGING_ARG)
 
 	bash $(shell pwd)/bin/run-after-success-hooks
 
