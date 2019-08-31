@@ -24,7 +24,7 @@ generate-certificates:
 
 	bash $(shell pwd)/bin/run-after-success-hooks
 
-renew:
+renew: check-renewal-need
 	$(DOCKER_RUN_CERTBOT) renew $(STAGING_ARG)
 
 	bash $(shell pwd)/bin/run-after-success-hooks
@@ -36,9 +36,6 @@ install-logrotation:
 	sudo chown 0:0 /etc/logrotate.d/certbot-manager
 	sudo chmod 644 /etc/logrotate.d/certbot-manager
 
-test:
-	echo $(DOMAINS)
-
 install-renewal-cron: install-logrotation
 	@echo "==> Adding cron job to run every SUN, WED, FRI of every 2nd month..."
 	@echo "0 0 * */2 0,3,5 root make -C $(PWD) renew >> /var/log/certbot-manager/certbot.log 2>&1" > certbot_renewal.cron
@@ -46,3 +43,10 @@ install-renewal-cron: install-logrotation
 	sudo chown root:root /etc/cron.d/certbot_renewal
 	@echo "Cron installed at '/etc/cron.d/certbot_renewal'"
 
+check-renewal-need:
+	$(DOCKER_RUN_CERTBOT) certificates | grep -oP "(?<=VALID: )(\d\d)(?= days)" | sort -r | head -n1 > /tmp/__remaining-certficate-days
+
+	@if [ "$(shell cat /tmp/__remaining-certficate-days | head -n1)" -gt "30"  ]; then\
+		echo "Certificate valid for more than 30 days";\
+		exit 1; \
+	fi
