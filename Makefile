@@ -37,8 +37,11 @@ install-logrotation:
 	sudo chmod 644 /etc/logrotate.d/certbot-manager
 
 install-renewal-cron: install-logrotation
+	# Install gawk to be able to append timestamp to log lines
+	# See: https://superuser.com/a/1054077
+	sudo apt-get install -y gawk
 	@echo "==> Adding cron job to run every SUN, WED, FRI of every 2nd month..."
-	@echo "0 0 * */2 0,3,5 root make -C $(PWD) renew >> /var/log/certbot-manager/certbot.log 2>&1" > certbot_renewal.cron
+	@echo "0 0 * */2 0,3,5 root stdbuf -i0 -o0 make -C $(PWD) renew 2>&1 | awk '{ print strftime("[%c]: "), $0; fflush();  }' >> /var/log/certbot-manager/certbot.log 2>&1" > certbot_renewal.cron
 	sudo mv certbot_renewal.cron /etc/cron.d/certbot_renewal
 	sudo chown root:root /etc/cron.d/certbot_renewal
 	@echo "Cron installed at '/etc/cron.d/certbot_renewal'"
