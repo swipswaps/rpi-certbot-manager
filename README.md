@@ -1,7 +1,6 @@
-## Wildcard SSL certificates from Letsencrypt (certbot) on RaspberryPi using Digitalocean plugin
+## RPI-Certbot-Manager 
 
-Generate and renew wildcard certificates for Domains managed on Digitalocean
-using certbot from Letsencrypt.
+Manage SSL certificates using Letsencrypt for Domains managed on Digitalocean
 
 #### Requirements
 * RaspberryPi
