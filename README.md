@@ -13,10 +13,10 @@ Manage SSL certificates using Letsencrypt for Domains managed on Digitalocean
 #### Download latest version
 
 ```console
-$ wget -O rpi-certbot-manager-1.1.0.tar.gz https://github.com/tsrivishnu/rpi-certbot-manager/archive/v1.1.0.tar.gz && \
-tar -xzvf rpi-certbot-manager-1.1.0.tar.gz && \
-rm rpi-certbot-manager-1.1.0.tar.gz && \
-cd rpi-certbot-manager-1.1.0
+$ wget -O rpi-certbot-manager-1.2.0.tar.gz https://github.com/tsrivishnu/rpi-certbot-manager/archive/v1.1.0.tar.gz && \
+tar -xzvf rpi-certbot-manager-1.2.0.tar.gz && \
+rm rpi-certbot-manager-1.2.0.tar.gz && \
+cd rpi-certbot-manager-1.2.0
 ```
 
 ##### Digitalocean credentials
