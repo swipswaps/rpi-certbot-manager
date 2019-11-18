@@ -4,7 +4,7 @@ ifeq ($(STAGING), 1)
 	STAGING_ARG = --staging
 endif
 
-DOCKER_RUN_CERTBOT ?= docker run --rm --name certbot -v "$(shell pwd)/letsencrypt:/letsencrypt" -v "$(shell pwd)/config:/config" tsrivishnu/for-rpi_alpine3.7_certbot-dns-digitalocean --dns-digitalocean --dns-digitalocean-credentials $(CREDENTIALS_FILE) --config-dir /letsencrypt --work-dir /letsencrypt
+DOCKER_RUN_CERTBOT ?= docker run --rm --name cron-certbot-manager -v "$(shell pwd)/letsencrypt:/letsencrypt" -v "$(shell pwd)/config:/config" tsrivishnu/for-rpi_alpine3.7_certbot-dns-digitalocean --dns-digitalocean --dns-digitalocean-credentials $(CREDENTIALS_FILE) --config-dir /letsencrypt --work-dir /letsencrypt
 
 # Join the list of domains from +DOMAINS+ variable to generate the string that
 # # is used to pass to the certbot scripts in the format
@@ -41,12 +41,16 @@ install-renewal-cron: install-logrotation
 	# See: https://superuser.com/a/1054077
 	sudo apt-get install -y gawk
 	@echo "==> Adding cron job to run every SUN, WED, FRI of every 2nd month..."
-	@echo "0 0 * */2 0,3,5 root stdbuf -i0 -o0 make -C $(PWD) renew 2>&1 | awk '{ print strftime("[%c]: "), $0; fflush();  }' >> /var/log/certbot-manager/certbot.log 2>&1" > certbot_renewal.cron
+	@echo "0 0 * */2 0,3,5 root make -C $(PWD) renew >> /var/log/certbot-manager/certbot.log 2>&1" > certbot_renewal.cron
 	sudo mv certbot_renewal.cron /etc/cron.d/certbot_renewal
 	sudo chown root:root /etc/cron.d/certbot_renewal
 	@echo "Cron installed at '/etc/cron.d/certbot_renewal'"
 
 check-renewal-need:
+	@echo "\n\n-----------------------"
+	@echo $(shell date)
+	@echo "-----------------------"
+
 	$(DOCKER_RUN_CERTBOT) certificates | grep -oP "(?<=VALID: )(\d\d)(?= days)" | sort -r | head -n1 > /tmp/__remaining-certficate-days
 
 	@if [ "$(shell cat /tmp/__remaining-certficate-days | head -n1)" -gt "30"  ]; then\
