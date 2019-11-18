@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 1.2.0 (2019-11-18)
+
+* [Revert]: [Enhancement] Log entries are prepended with timestamp.
+  * [Fix] Cron job doesn't run because output redirection is broken
+
 ## 1.1.0 (2019-08-31)
 
 * [Feature] Log to +/var/log+ along with log rotation so that logs are kept longer.
