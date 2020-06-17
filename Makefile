@@ -4,7 +4,7 @@ ifeq ($(STAGING), 1)
 	STAGING_ARG = --staging
 endif
 
-DOCKER_RUN_CERTBOT ?= docker run --rm --name cron-certbot-manager -v "$(shell pwd)/letsencrypt:/letsencrypt" -v "$(shell pwd)/config:/config" tsrivishnu/for-rpi_alpine3.7_certbot-dns-digitalocean --dns-digitalocean --dns-digitalocean-credentials $(CREDENTIALS_FILE) --config-dir /letsencrypt --work-dir /letsencrypt
+DOCKER_RUN_CERTBOT ?= docker run --rm --name cron-certbot-manager -v "$(shell pwd)/letsencrypt:/letsencrypt" -v "$(shell pwd)/config:/config" forrpi/certbot-dns-digitalocean:v0.37.2 --dns-digitalocean --dns-digitalocean-credentials $(CREDENTIALS_FILE) --config-dir /letsencrypt --work-dir /letsencrypt
 
 # Join the list of domains from +DOMAINS+ variable to generate the string that
 # # is used to pass to the certbot scripts in the format
